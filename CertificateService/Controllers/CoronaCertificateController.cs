@@ -1,16 +1,20 @@
 ﻿using CertificateService.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace CertificateService.Controllers
 {
     [ApiController]
-    public class CoronaCertificateController : Controller
+    [Route("[controller]")]
+    public class CoronaCertificateController : ControllerBase
     {
+        private readonly ILogger<CoronaCertificateController> _logger;
+        public CoronaCertificateController(ILogger<CoronaCertificateController> logger)
+        {
+            _logger = logger;
+        }
 
-        // POST: CoronaCertificateController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost(Name = "addcertificate")]
         public void Create(string name, string surname, string birthDate, string certificateNumber)
         {
             PatientModel patient = new PatientModel()
