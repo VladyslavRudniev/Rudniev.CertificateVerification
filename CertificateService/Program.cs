@@ -1,3 +1,5 @@
+using CertificateService.EF;
+
 namespace CertificateService
 {
     public class Program
@@ -6,8 +8,8 @@ namespace CertificateService
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDbContext<Context>();
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
 
@@ -15,8 +17,11 @@ namespace CertificateService
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
-            app.MapControllers();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.Run();
         }

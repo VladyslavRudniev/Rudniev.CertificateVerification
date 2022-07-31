@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CertificateService.Models
 {
-    public class CertificateModel
+    public class Certificate
     {
         [Key]
         [ForeignKey("Patient")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid ID { get; set; }
         public string CertificateNumber { get; set; }
-        public PatientModel Patient { get; set; }
+        public Patient Patient { get; set; }
     }
 }

@@ -5,8 +5,8 @@ namespace CertificateService.EF
 {
     public class Context : DbContext
     {
-        public DbSet<CertificateModel> Certificates { get; set; }
-        public DbSet<PatientModel> Patients { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<Patient> Patients { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
