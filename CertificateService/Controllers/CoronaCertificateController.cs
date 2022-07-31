@@ -32,12 +32,6 @@ namespace CertificateService.Controllers
             };
             patient.Certificate = certificate;
 
-            using (var db = new BL())
-            {
-                db.AddPatient(patient);
-                db.AddCertificate(certificate);
-            }
-
         }
 
     }

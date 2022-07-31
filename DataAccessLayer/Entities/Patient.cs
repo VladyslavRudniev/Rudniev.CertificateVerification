@@ -8,7 +8,7 @@ namespace DataAccessLayer.Entities
         public Guid ID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
         public Certificate Certificate { get; set; }
     }
 }
