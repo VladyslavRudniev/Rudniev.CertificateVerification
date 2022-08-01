@@ -49,17 +49,20 @@ export const CovidCertificate = () => {
         </div>
           <h5>Відскануйте qr-код</h5>
 
-          <div className="input-field">
-              <input
-                  id="qrscaner"
-                  placeholder=""
-              />
-              <label htmlFor="qrscaner" className="active">Натисніть щоб сканувати</label>
+          <div className="row">
+              <div className="col">
+                  <div id="reader"></div>
+              </div>
+              <div className="col">
+                  <h4>SCAN RESULT</h4>
+                  <div id="result">Result Here</div>
+              </div>
           </div>
 
           <button className="btn waves-effect waves-light" type="submit" name="action">Відправити
           <i className="material-icons right">send</i>
         </button>
       </form>
-  )
+    )
+
 }

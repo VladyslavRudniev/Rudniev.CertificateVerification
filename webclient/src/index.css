@@ -15,11 +15,24 @@ code {
 .pl2 {
     padding-left: 2rem;
 }
-
 .mt2 {
     margin-top: 2rem;
 }
-
 .mt1 {
     margin-top: 1rem;
+}
+
+.result {
+    background-color: green;
+    color: #fff;
+    padding: 20px;
+}
+.row {
+    display: flex;
+}
+.col {
+    padding: 30px;
+}
+#reader {
+    width: 500px;
 }
