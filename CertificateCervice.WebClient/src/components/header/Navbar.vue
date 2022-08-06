@@ -1,7 +1,7 @@
 <template>
     <nav>
-        <div className="nav-wrapper pl2">
-            <a href="/" className="brand-logo">Test task</a>
+        <div class="nav-wrapper pl1">
+            <a href="/" class="brand-logo">{{logoMsg}}</a>
         </div>
     </nav>
 </template>
@@ -10,12 +10,20 @@
     export default {
         name: 'Navbar',
         props: {
+            logoMsg:
+            {
+                type: String,
+                require: true,
+                default: "hello world"
+            }
         }
+        
     };
+    
 </script>
 
 <style scoped>
-    .pl2 {
-        padding-left: 2rem;
+    .pl1 {
+        padding-left: 1rem;
     }
 </style>

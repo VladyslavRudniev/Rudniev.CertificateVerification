@@ -1,8 +1,8 @@
 <template>
     <div id="app">
-        <Navbar />
+        <Navbar logoMsg="First app"/>
         <CertificateForm />
-</div>
+    </div>
 </template>
 
 <script>
@@ -15,6 +15,7 @@
             Navbar,
             CertificateForm
         }
+
     };
 </script>
 

@@ -3,43 +3,47 @@
 
         <h4>Бланк додавання сертифіката ковід</h4>
 
-        <div className="input-field mt2">
-            <label htmlFor="name" className="active">Введіть ім'я пацієнта:</label>
+        <div class="input-field mt2">
+            <label for="name" class="active">Введіть ім'я пацієнта:</label>
             <input type="text"
                    id="name"
                    name="name"
                    placeholder="Введіть ім'я пацієнта" />
         </div>
-        <div className="input-field">
-            <label htmlFor="surname" className="active">Введіть фамілію пацієнта:</label>
+        <div class="input-field">
+            <label for="surname" class="active">Введіть фамілію пацієнта:</label>
             <input type="text"
                    id="surname"
                    name="surname"
                    placeholder="Введіть фамілію пацієнта" />
         </div>
-        <div className="input-field">
-            <label htmlFor="date" className="active">Введіть дату народження:</label>
+        <div class="input-field">
+            <label for="date" class="active">Введіть дату народження:</label>
             <input type="date"
                    id="date"
                    name="birthdate" />
         </div>
 
-        <h5>Відскануйте qr-код</h5>
+        <a class="waves-effect waves-light btn" @click="qrVisible=!qrVisible">далі</a>
 
-        <div className="row">
-            <div className="col">
-                <div id="reader"></div>
-            </div>
-            <div className="col">
-                <h4>SCAN RESULT</h4>
-                <div id="result">Result Here</div>
-            </div>
-        </div>
+        <template v-if="qrVisible">
+            <h5>Відскануйте qr-код</h5>
 
-        <button className="btn waves-effect waves-light" type="submit" id="submit" name="action">
-            Відправити
-            <i className="material-icons right">send</i>
-        </button>
+            <div class="row">
+                <div class="col">
+                    <div id="reader"></div>
+                </div>
+                <div class="col">
+                    <h4>SCAN RESULT</h4>
+                    <div id="result">Result Here</div>
+                </div>
+            </div>
+
+            <button class="btn waves-effect waves-light" type="submit" id="submit" name="action">
+                Відправити
+                <i class="material-icons right">send</i>
+            </button>
+        </template>
 
     </form>
 </template>
@@ -48,6 +52,7 @@
     export default {
         name: 'CertificateForm',
         props: {
+            qrVisible: Boolean
         }
     };
 </script>
