@@ -8,7 +8,8 @@ namespace CertificateService
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<Context>();
+            builder.Services.AddCors();
+            builder.Services.AddDbContext<ApplicationDbContext>();
             builder.Services.AddControllers();
 
             var app = builder.Build();
@@ -17,7 +18,11 @@ namespace CertificateService
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseRouting();
+
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders());
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

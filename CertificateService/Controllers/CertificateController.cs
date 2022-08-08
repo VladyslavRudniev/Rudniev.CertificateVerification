@@ -1,7 +1,7 @@
 ﻿using CertificateService.EF;
-using CertificateService.Models;
+using CertificateService.Entities;
+using CertificateService.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace CertificateService.Controllers
 {
@@ -9,37 +9,48 @@ namespace CertificateService.Controllers
     [Route("api/[controller]")]
     public class CertificateController : ControllerBase
     {
-        private Context db;
+        private ApplicationDbContext db;
         private readonly ILogger<CertificateController> _logger;
-        public CertificateController(Context context, ILogger<CertificateController> logger)
+        public CertificateController(ApplicationDbContext context, ILogger<CertificateController> logger)
         {
             _logger = logger;
             db = context;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Certificate>> Post(PatientCertificateModel model)
+        public async Task<ActionResult> Post(PatientCertificateModel model)
         {
-            Patient patient = new Patient
+            int result;
+
+            if (!string.IsNullOrEmpty(model.Name) && !string.IsNullOrEmpty(model.Surname)
+                && !string.IsNullOrEmpty(model.BirthDate) && !string.IsNullOrEmpty(model.CertificateNumber))
             {
-                ID = Guid.NewGuid(),
-                Name = model.Name,
-                Surname = model.Surname,
-                BirthDate = model.BirthDate
-            };
-
-            Certificate certificate = new Certificate
+                Patient patient = new Patient
+                {
+                    Id = Guid.NewGuid(),
+                    Name = model.Name,
+                    Surname = model.Surname,
+                    BirthDate = model.BirthDate
+                };
+                db.Patients.Add(patient);
+                Certificate certificate = new Certificate
+                {
+                    Id = Guid.NewGuid(),
+                    CertificateNumber = model.CertificateNumber,
+                    Patient = patient
+                };
+                db.Certificates.Add(certificate);
+                result = await db.SaveChangesAsync();
+            }
+            else
             {
-                ID = Guid.NewGuid(),
-                CertificateNumber = model.CertificateNumber,
-                Patient = patient
-            };
+                return BadRequest(model);
+            }
 
-            db.Patients.Add(patient);
-            db.Certificates.Add(certificate);
-            await db.SaveChangesAsync();
-            return Ok(certificate);
-
+            if (result == 2)
+                return Ok();
+            else
+                return StatusCode(500);
         }
 
     }
