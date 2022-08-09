@@ -1,6 +1,7 @@
 ﻿using CertificateService.EF;
 using CertificateService.Entities;
 using CertificateService.ViewModels;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CertificateService.Controllers
@@ -17,6 +18,7 @@ namespace CertificateService.Controllers
             db = context;
         }
 
+        [EnableCors("AllowOrigin")]
         [HttpPost]
         public async Task<ActionResult> Post(PatientCertificateModel model)
         {

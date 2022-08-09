@@ -8,7 +8,17 @@ namespace CertificateService
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddCors();
+            builder.Services.AddCors(options => 
+            {
+                options.AddPolicy(name: "AllowOrigin",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:8080")
+                    .WithHeaders("content-type")
+                    .WithMethods("POST")
+                    .AllowCredentials();
+                });
+            });
             builder.Services.AddDbContext<ApplicationDbContext>();
             builder.Services.AddControllers();
 
@@ -21,7 +31,7 @@ namespace CertificateService
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders());
+            app.UseCors("AllowOrigin");
 
             app.UseEndpoints(endpoints =>
             {
