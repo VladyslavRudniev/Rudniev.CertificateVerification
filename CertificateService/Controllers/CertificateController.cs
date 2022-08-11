@@ -25,7 +25,7 @@ namespace CertificateService.Controllers
         {
             List<PatientCertificateModel> model = new List<PatientCertificateModel>();
 
-            var patients = await db.Patients.Include(o => o.Certificate).ToListAsync();
+            var patients = await db.Patients.Include(o => o.Certificate).OrderBy(o => o.Surname).ThenBy(o => o.Name).ToListAsync();
 
             foreach (var patient in patients)
             {
