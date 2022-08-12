@@ -15,7 +15,7 @@ namespace CertificateService
                 {
                     builder.WithOrigins("http://localhost:8080")
                     .WithHeaders("content-type")
-                    .WithMethods("POST", "GET")
+                    .WithMethods("POST", "GET", "PUT")
                     .AllowCredentials();
                 });
             });
