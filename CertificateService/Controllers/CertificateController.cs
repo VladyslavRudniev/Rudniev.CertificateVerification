@@ -21,16 +21,17 @@ namespace CertificateService.Controllers
 
         [EnableCors("AllowOrigin")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PatientCertificateModel>>> Get()
+        public async Task<ActionResult<IEnumerable<PatientCertificateReadAndUpdateModel>>> Get()
         {
-            List<PatientCertificateModel> model = new List<PatientCertificateModel>();
+            List<PatientCertificateReadAndUpdateModel> model = new List<PatientCertificateReadAndUpdateModel>();
 
             var patients = await db.Patients.Include(o => o.Certificate).OrderBy(o => o.Surname).ThenBy(o => o.Name).ToListAsync();
 
             foreach (var patient in patients)
             {
-                model.Add(new PatientCertificateModel
+                model.Add(new PatientCertificateReadAndUpdateModel
                 {
+                    PatientId = patient.Id,
                     Name = patient.Name,
                     Surname = patient.Surname,
                     BirthDate = patient.BirthDate,
@@ -43,34 +44,34 @@ namespace CertificateService.Controllers
 
         [EnableCors("AllowOrigin")]
         [HttpPost]
-        public async Task<ActionResult> Post(PatientCertificateModel model)
+        public async Task<ActionResult> Post(PatientCertificateCreateModel model)
         {
-            int result;
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            else if (string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.Surname)
+                || string.IsNullOrEmpty(model.BirthDate) || string.IsNullOrEmpty(model.CertificateNumber))
+            {
+                return BadRequest();
+            }
 
-            if (!string.IsNullOrEmpty(model.Name) && !string.IsNullOrEmpty(model.Surname)
-                && !string.IsNullOrEmpty(model.BirthDate) && !string.IsNullOrEmpty(model.CertificateNumber))
+            Patient patient = new Patient
             {
-                Patient patient = new Patient
-                {
-                    Id = Guid.NewGuid(),
-                    Name = model.Name,
-                    Surname = model.Surname,
-                    BirthDate = model.BirthDate
-                };
-                db.Patients.Add(patient);
-                Certificate certificate = new Certificate
-                {
-                    Id = Guid.NewGuid(),
-                    CertificateNumber = model.CertificateNumber,
-                    Patient = patient
-                };
-                db.Certificates.Add(certificate);
-                result = await db.SaveChangesAsync();
-            }
-            else
+                Id = Guid.NewGuid(),
+                Name = model.Name,
+                Surname = model.Surname,
+                BirthDate = model.BirthDate
+            };
+            db.Patients.Add(patient);
+            Certificate certificate = new Certificate
             {
-                return BadRequest(model);
-            }
+                Id = Guid.NewGuid(),
+                CertificateNumber = model.CertificateNumber,
+                Patient = patient
+            };
+            db.Certificates.Add(certificate);
+            var result = await db.SaveChangesAsync();
 
             if (result == 2)
                 return Ok();
@@ -78,5 +79,53 @@ namespace CertificateService.Controllers
                 return StatusCode(500);
         }
 
+        [EnableCors("AllowOrigin")]
+        [HttpPut]
+        public async Task<ActionResult> Put(PatientCertificateReadAndUpdateModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            else if (string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.Surname)
+                || string.IsNullOrEmpty(model.BirthDate) || string.IsNullOrEmpty(model.CertificateNumber))
+            {
+                return BadRequest();
+            }
+            else if (!db.Patients.Any(o => o.Id == model.PatientId))
+            {
+                return NotFound();
+            }
+
+            var patient = db.Patients.First(o => o.Id == model.PatientId);
+            patient.Name = model.Name;
+            patient.Surname = model.Surname;
+            patient.BirthDate = model.BirthDate;
+            db.Patients.Update(patient);
+
+            var certificate = db.Certificates.First(o => o.PatientId == model.PatientId);
+            if (certificate is null)
+            {
+                Certificate newCertificate = new Certificate
+                {
+                    Id = Guid.NewGuid(),
+                    CertificateNumber = model.CertificateNumber,
+                    Patient = patient
+                };
+                db.Certificates.Add(newCertificate);
+            }
+            else
+            {
+                certificate.CertificateNumber = model.CertificateNumber;
+                db.Certificates.Update(certificate);
+            }
+
+            var result = await db.SaveChangesAsync();
+
+            if (result == 2)
+                return Ok();
+            else
+                return StatusCode(500);
+        }
     }
 }
