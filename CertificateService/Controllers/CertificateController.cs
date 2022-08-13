@@ -103,7 +103,7 @@ namespace CertificateService.Controllers
             patient.BirthDate = model.BirthDate;
             db.Patients.Update(patient);
 
-            var certificate = db.Certificates.First(o => o.PatientId == model.PatientId);
+            var certificate = db.Certificates.FirstOrDefault(o => o.PatientId == model.PatientId);
             if (certificate is null)
             {
                 Certificate newCertificate = new Certificate
@@ -123,6 +123,36 @@ namespace CertificateService.Controllers
             var result = await db.SaveChangesAsync();
 
             if (result == 2)
+                return Ok();
+            else
+                return StatusCode(500);
+        }
+
+        [EnableCors("AllowOrigin")]
+        [HttpDelete]
+        public async Task<ActionResult> Delete(PatientCertificateDeleteModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            else if (!db.Patients.Any(o => o.Id == model.PatientId))
+            {
+                return NotFound();
+            }
+
+            var certificate = db.Certificates.FirstOrDefault(o => o.PatientId == model.PatientId);
+            if (!(certificate is null))
+            {
+                db.Certificates.Remove(certificate);
+            }
+
+            var patient = db.Patients.First(o => o.Id == model.PatientId);
+            db.Patients.Remove(patient);
+
+            var result = await db.SaveChangesAsync();
+
+            if (result == 2 || result == 1)
                 return Ok();
             else
                 return StatusCode(500);
