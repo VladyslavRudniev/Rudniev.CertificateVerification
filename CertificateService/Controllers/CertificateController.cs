@@ -46,7 +46,12 @@ namespace CertificateService.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(PatientCertificateCreateModel model)
         {
-            if (!ModelState.IsValid)
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            else if (string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.Surname)
+                || string.IsNullOrEmpty(model.BirthDate) || string.IsNullOrEmpty(model.CertificateNumber))
             {
                 return BadRequest();
             }
@@ -78,7 +83,12 @@ namespace CertificateService.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(PatientCertificateReadAndUpdateModel model)
         {
-            if (!ModelState.IsValid)
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            else if (string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.Surname)
+                || string.IsNullOrEmpty(model.BirthDate) || string.IsNullOrEmpty(model.CertificateNumber))
             {
                 return BadRequest();
             }
@@ -122,7 +132,7 @@ namespace CertificateService.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete(PatientCertificateDeleteModel model)
         {
-            if (!ModelState.IsValid)
+            if (model == null)
             {
                 return BadRequest();
             }
